@@ -1,9 +1,15 @@
 package com.example.webapp2;
 
+import android.app.DownloadManager;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +41,29 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(gif.getImages().getOriginal().getUrl())
                 .into(holder.imageView);
+
+        holder.downloadButton.setOnClickListener(v -> downloadGif(holder.itemView.getContext(), gif));
+    }
+
+    private void downloadGif(Context context, GiphyResponse.Data gif) {
+        String gifUrl = gif.getImages().getOriginal().getUrl();
+        String fileName = "giphy_" + System.currentTimeMillis() + ".gif";
+
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(gifUrl))
+                .setTitle("Downloading GIF")
+                .setDescription("Downloading GIF from Giphy")
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+                .setAllowedOverMetered(true)
+                .setAllowedOverRoaming(true);
+
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        if (downloadManager != null) {
+            downloadManager.enqueue(request);
+            Toast.makeText(context, "Download started", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Cannot download GIF", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -44,11 +73,12 @@ public class GifAdapter extends RecyclerView.Adapter<GifAdapter.GifViewHolder> {
 
     public static class GifViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
+        ImageButton downloadButton;
 
         public GifViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.gifImage);
+            downloadButton = itemView.findViewById(R.id.downloadButton);
         }
     }
 }
-
