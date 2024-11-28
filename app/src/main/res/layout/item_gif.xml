@@ -1,6 +1,27 @@
-<ImageView
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/gifImage"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:scaleType="centerCrop" />
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/gifImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageButton
+        android:id="@+id/downloadButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_save"
+        android:contentDescription="Download GIF"
+        app:layout_constraintBottom_toBottomOf="@id/gifImage"
+        app:layout_constraintEnd_toEndOf="@id/gifImage" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
